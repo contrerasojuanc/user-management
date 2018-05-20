@@ -12,8 +12,12 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Post;
+use App\Entity\User;
+use App\Entity\UserGroup;
 use App\Form\PostType;
+use App\Form\UserType;
 use App\Repository\PostRepository;
+use App\Repository\UserRepository;
 use App\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -32,7 +36,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * See http://knpbundles.com/keyword/admin
  *
- * @Route("/admin/post")
+ * @Route("/admin")
  * @Security("has_role('ROLE_ADMIN')")
  *
  * @author Ryan Weaver <weaverryan@gmail.com>
@@ -41,31 +45,23 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminController extends AbstractController
 {
     /**
-     * Lists all Post entities.
+     * Lists all Users entities.
      *
-     * This controller responds to two different routes with the same URL:
-     *   * 'admin_post_index' is the route with a name that follows the same
-     *     structure as the rest of the controllers of this class.
-     *   * 'admin_index' is a nice shortcut to the backend homepage. This allows
-     *     to create simpler links in the templates. Moreover, in the future we
-     *     could move this annotation to any other controller while maintaining
-     *     the route name and therefore, without breaking any existing link.
-     *
-     * @Route("/", name="admin_index")
-     * @Route("/", name="admin_post_index")
+     * @Route("/", defaults={"page": "1"}, name="admin_user_index")
+     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, name="index_paginated")
      * @Method("GET")
      */
-    public function index(PostRepository $posts): Response
+    public function index(UserRepository $users, $page): Response
     {
-        $authorPosts = $posts->findBy(['author' => $this->getUser()], ['publishedAt' => 'DESC']);
+        $users = $users->findByPage($page);
 
-        return $this->render('admin/blog/index.html.twig', ['posts' => $authorPosts]);
+        return $this->render('admin/user/index.html.twig', ['users' => $users]);
     }
 
     /**
      * Creates a new Post entity.
      *
-     * @Route("/new", name="admin_post_new")
+     * @Route("/new", name="admin_user_new")
      * @Method({"GET", "POST"})
      *
      * NOTE: the Method annotation is optional, but it's a recommended practice
@@ -74,11 +70,10 @@ class AdminController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $post = new Post();
-        $post->setAuthor($this->getUser());
+        $user = new User();
 
         // See https://symfony.com/doc/current/book/forms.html#submitting-forms-with-multiple-buttons
-        $form = $this->createForm(PostType::class, $post)
+        $form = $this->createForm(UserType::class, $user)
             ->add('saveAndCreateNew', SubmitType::class);
 
         $form->handleRequest($request);
@@ -88,10 +83,8 @@ class AdminController extends AbstractController
         // However, we explicitly add it to improve code readability.
         // See https://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
         if ($form->isSubmitted() && $form->isValid()) {
-            $post->setSlug(Slugger::slugify($post->getTitle()));
-
             $em = $this->getDoctrine()->getManager();
-            $em->persist($post);
+            $em->persist($user);
             $em->flush();
 
             // Flash messages are used to notify the user about the result of the
@@ -101,14 +94,14 @@ class AdminController extends AbstractController
             $this->addFlash('success', 'post.created_successfully');
 
             if ($form->get('saveAndCreateNew')->isClicked()) {
-                return $this->redirectToRoute('admin_post_new');
+                return $this->redirectToRoute('admin_user_new');
             }
 
-            return $this->redirectToRoute('admin_post_index');
+            return $this->redirectToRoute('admin_user_index');
         }
 
-        return $this->render('admin/blog/new.html.twig', [
-            'post' => $post,
+        return $this->render('admin/user/new.html.twig', [
+            'user' => $user,
             'form' => $form->createView(),
         ]);
     }
@@ -116,7 +109,7 @@ class AdminController extends AbstractController
     /**
      * Finds and displays a Post entity.
      *
-     * @Route("/{id}", requirements={"id": "\d+"}, name="admin_post_show")
+     * @Route("/{id}", requirements={"id": "\d+"}, name="admin_user_show")
      * @Method("GET")
      */
     public function show(Post $post): Response
@@ -133,7 +126,7 @@ class AdminController extends AbstractController
     /**
      * Displays a form to edit an existing Post entity.
      *
-     * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_post_edit")
+     * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_user_edit")
      * @Method({"GET", "POST"})
      */
     public function edit(Request $request, Post $post): Response
@@ -149,7 +142,7 @@ class AdminController extends AbstractController
 
             $this->addFlash('success', 'post.updated_successfully');
 
-            return $this->redirectToRoute('admin_post_edit', ['id' => $post->getId()]);
+            return $this->redirectToRoute('admin_user_edit', ['id' => $post->getId()]);
         }
 
         return $this->render('admin/blog/edit.html.twig', [
@@ -161,7 +154,7 @@ class AdminController extends AbstractController
     /**
      * Deletes a Post entity.
      *
-     * @Route("/{id}/delete", name="admin_post_delete")
+     * @Route("/{id}/delete", name="admin_user_delete")
      * @Method("POST")
      * @Security("is_granted('delete', post)")
      *
@@ -171,7 +164,7 @@ class AdminController extends AbstractController
     public function delete(Request $request, Post $post): Response
     {
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
-            return $this->redirectToRoute('admin_post_index');
+            return $this->redirectToRoute('admin_user_index');
         }
 
         // Delete the tags associated with this blog post. This is done automatically
@@ -185,6 +178,6 @@ class AdminController extends AbstractController
 
         $this->addFlash('success', 'post.deleted_successfully');
 
-        return $this->redirectToRoute('admin_post_index');
+        return $this->redirectToRoute('admin_user_index');
     }
 }

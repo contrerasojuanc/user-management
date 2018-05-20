@@ -14,6 +14,9 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 
 /**
  * This custom Doctrine repository is empty because so far we don't need any custom
@@ -27,8 +30,34 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
+    const NUM_ITEMS = 10;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
+    }
+
+    public function findByPage($page = 1): Pagerfanta
+    {
+        $query = $this->findAll();
+
+        return $this->createPaginatorFromArray($query, $page);
+    }
+
+    private function createPaginator(Query $query, int $page): Pagerfanta
+    {
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($query));
+        $paginator->setMaxPerPage(self::NUM_ITEMS);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
+    }
+    private function createPaginatorFromArray(Array $query, int $page): Pagerfanta
+    {
+        $paginator = new Pagerfanta(new ArrayAdapter($query));
+        $paginator->setMaxPerPage(self::NUM_ITEMS);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
     }
 }
