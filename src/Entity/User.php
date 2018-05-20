@@ -11,6 +11,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -72,6 +74,16 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="json")
      */
     private $roles = [];
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserGroup", mappedBy="userId")
+     */
+    private $groups;
+
+    public function __construct()
+    {
+        $this->groups = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -179,5 +191,36 @@ class User implements UserInterface, \Serializable
     {
         // add $this->salt too if you don't use Bcrypt or Argon2i
         [$this->id, $this->username, $this->password] = unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+    /**
+     * @return Collection|UserGroup[]
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(UserGroup $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+            $group->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(UserGroup $group): self
+    {
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group);
+            // set the owning side to null (unless already changed)
+            if ($group->getUserId() === $this) {
+                $group->setUserId(null);
+            }
+        }
+
+        return $this;
     }
 }
