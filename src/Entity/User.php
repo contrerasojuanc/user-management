@@ -97,12 +97,12 @@ class User implements UserInterface, \Serializable
 
     public function getFullName(): string
     {
-        return $this->fullName;
+        return $this->fullName ?? '';
     }
 
     public function getUsername(): string
     {
-        return $this->username;
+        return $this->username ?? '';
     }
 
     public function setUsername(string $username): void
@@ -112,7 +112,7 @@ class User implements UserInterface, \Serializable
 
     public function getEmail(): string
     {
-        return $this->email;
+        return $this->email ?? '';
     }
 
     public function setEmail(string $email): void

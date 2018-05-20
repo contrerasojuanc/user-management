@@ -4,7 +4,7 @@
 # See https://symfony.com/doc/current/cookbook/templating/render_without_controller.html
 homepage:
     path: /
-    controller: App\Controller\Admin\AdminController::index
+    controller: App\Controller\Admin\UserController::index
     defaults:
         template: security/login.html.twig
         page: 1

@@ -36,13 +36,13 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * See http://knpbundles.com/keyword/admin
  *
- * @Route("/admin")
+ * @Route("/admin/user")
  * @Security("has_role('ROLE_ADMIN')")
  *
  * @author Ryan Weaver <weaverryan@gmail.com>
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  */
-class AdminController extends AbstractController
+class UserController extends AbstractController
 {
     /**
      * Lists all Users entities.
