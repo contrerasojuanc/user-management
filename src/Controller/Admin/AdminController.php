@@ -38,7 +38,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @author Ryan Weaver <weaverryan@gmail.com>
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  */
-class BlogController extends AbstractController
+class AdminController extends AbstractController
 {
     /**
      * Lists all Post entities.

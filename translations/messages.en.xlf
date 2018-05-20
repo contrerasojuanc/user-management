@@ -350,6 +350,10 @@
                 <source>help.more_information</source>
                 <target><![CDATA[For more information, check out the <a href="https://symfony.com/doc">Symfony doc</a>.]]></target>
             </trans-unit>
+            <trans-unit id="help.hardcoded_user">
+                <source>help.hardcoded_user</source>
+                <target>In a real application, hardcoding the user/password would be a problem, but for this test application it's very convenient to do so</target>
+            </trans-unit>
 
             <trans-unit id="rss.title">
                 <source>rss.title</source>
