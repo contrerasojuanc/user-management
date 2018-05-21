@@ -96,7 +96,7 @@ class User implements UserInterface, \Serializable
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
     public function setFullName(string $fullName): void
