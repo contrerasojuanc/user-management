@@ -8,13 +8,13 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="well">
-                <form id="search_form" method="post">
+                <form id="search_form" method="get" action="{{ path('admin_user_search') }}">
                     <fieldset>
                         <div class="col-sm-9">
                             <input type="text" id="search_text" name="search_text" value="" class="form-control" placeholder="Search user"/>
                         </div>
                         <div class="col-sm-3 text-right">
-                            <button type="button" class="btn btn-primary" id="search_button">
+                            <button type="submit" class="btn btn-primary" id="search_button">
                                 <i class="fa fa-search" aria-hidden="true"></i> Search
                             </button>
                         </div>

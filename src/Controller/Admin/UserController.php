@@ -174,4 +174,17 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('admin_user_index');
     }
+
+    /**
+     * @Route("/search", name="admin_user_search")
+     * @Method("GET")
+     */
+    public function search(Request $request, UserRepository $users): Response
+    {
+
+        $foundUsers = $users->findBySearch($request);
+
+        return $this->render('admin/user/index.html.twig', ['users' => $foundUsers]);
+
+    }
 }
