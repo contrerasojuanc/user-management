@@ -8,3 +8,8 @@ homepage:
     defaults:
         template: security/login.html.twig
         page: 1
+
+users:
+    type:     rest
+    resource: App\Controller\Api\UserController
+    prefix:   /api
