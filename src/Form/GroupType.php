@@ -45,9 +45,11 @@ class GroupType extends AbstractType
             ->add('name', null, [
                 'attr' => ['autofocus' => true],
                 'label' => 'Group Name',
+                'empty_data' => ''
             ])
             ->add('description', null, [
                 'label' => 'description',
+                'empty_data' => ''
             ])
         ;
     }

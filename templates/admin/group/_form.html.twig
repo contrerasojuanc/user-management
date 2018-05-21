@@ -11,7 +11,7 @@
     {{ include('admin/group/_delete_group_confirmation.html.twig') }}
 {% endif %}
 
-{{ form_start(form, {attr: attr|default({})}) }}
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_widget(form) }}
 
     <button type="submit" class="{{ button_css|default("btn btn-primary") }}">

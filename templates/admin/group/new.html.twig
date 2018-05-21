@@ -5,7 +5,7 @@
 {% block main %}
     <h1>New Group</h1>
 
-    {{ form_start(form) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
 

@@ -88,14 +88,17 @@ class GroupManagement
      */
     public function delete(Group $group)
     {
-
-        try {
-            $this->entityManager->remove($group);
-            $this->entityManager->flush();
-        } catch (Exception $e) {
-            return false;
+        //Allows delete only if no members
+        if($group->getUsers()->isEmpty()) {
+            try {
+                $this->entityManager->remove($group);
+                $this->entityManager->flush();
+                return true;
+            } catch (Exception $e) {
+                return false;
+            }
         }
-
+        return false;
     }
 
 }

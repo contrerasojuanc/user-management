@@ -165,9 +165,12 @@ class GroupController extends AbstractController
         }
 
         //Using Service
-        $this->groupManagement->delete($group);
+        if($this->groupManagement->delete($group)) {
+            $this->addFlash('success', 'Group deleted successfully');
+        } else {
+            $this->addFlash('danger', 'Group cannot be deleted while having active members');
+        }
 
-        $this->addFlash('success', 'Group deleted successfully');
 
         return $this->redirectToRoute('admin_group_index');
     }

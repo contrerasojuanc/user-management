@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GroupRepository")
@@ -21,6 +22,7 @@ class Group
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -28,6 +30,14 @@ class Group
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var User[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", cascade={"persist"})
+     * @ORM\JoinTable(name="user_group")
+     */
+    private $users;
 
     public function __construct()
     {
@@ -68,6 +78,11 @@ class Group
         $this->description = $description;
 
         return $this;
+    }
+
+    public function getUsers(): Collection
+    {
+        return $this->users;
     }
 
 }
