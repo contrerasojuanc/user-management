@@ -141,9 +141,9 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             //Using Service
-            $groups = $form->get("groups")->getData();
+            //$groups = $form->get("groups")->getData();
 
-            $this->userManagement->update($user, $groups);
+            $this->userManagement->update($user);
 
             $this->addFlash('success', 'User updated successfully');
 

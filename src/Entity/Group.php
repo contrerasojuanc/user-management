@@ -29,11 +29,6 @@ class Group
      */
     private $description;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\UserGroup", mappedBy="groupId")
-     */
-    private $users;
-
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -75,34 +70,4 @@ class Group
         return $this;
     }
 
-    /**
-     * @return Collection|UserGroup[]
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(UserGroup $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setGroupId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(UserGroup $user): self
-    {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
-            // set the owning side to null (unless already changed)
-            if ($user->getGroupId() === $this) {
-                $user->setGroupId(null);
-            }
-        }
-
-        return $this;
-    }
 }

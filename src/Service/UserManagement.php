@@ -40,7 +40,6 @@ class UserManagement
         $email = $user->getEmail();
 
         // create the user and encode its password
-        $user = new User();
         $user->setFullName($fullName);
         $user->setUsername($username);
         $user->setEmail($email);
@@ -52,12 +51,6 @@ class UserManagement
 
         try {
             $this->entityManager->persist($user);
-            foreach ($groups as $group) {
-                $userGroup = new UserGroup();
-                $userGroup->setGroupId($group);
-                $user->addGroup($userGroup);
-                $this->entityManager->persist($userGroup);
-            }
             $this->entityManager->flush();
         } catch (Exception $e) {
             return false;
@@ -69,26 +62,11 @@ class UserManagement
     /**
      * For updating users
      */
-    public function update(User $user, $groups)
+    public function update(User $user)
     {
 
         try {
             $this->entityManager->persist($user);
-
-            foreach ($user->getGroups() as $group) {
-                $userGroup = new UserGroup();
-                $userGroup->setGroupId($group);
-                $user->addGroup($userGroup);
-
-                $user->removeGroup($userGroup);
-            }
-
-            foreach ($groups as $group) {
-                $userGroup = new UserGroup();
-                $userGroup->setGroupId($group);
-                $user->addGroup($userGroup);
-                $this->entityManager->persist($userGroup);
-            }
             $this->entityManager->flush();
         } catch (Exception $e) {
             return false;

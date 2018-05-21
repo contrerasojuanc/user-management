@@ -76,7 +76,11 @@ class User implements UserInterface, \Serializable
     private $roles = [];
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\UserGroup", mappedBy="userId")
+     * @var Group[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Group", cascade={"persist"})
+     * @ORM\JoinTable(name="user_group")
+     * @ORM\OrderBy({"name": "ASC"})
      */
     private $groups;
 
@@ -201,26 +205,17 @@ class User implements UserInterface, \Serializable
         return $this->groups;
     }
 
-    public function addGroup(UserGroup $group): self
+    public function addGroup(?Group ...$groups): void
     {
-        if (!$this->groups->contains($group)) {
-            $this->groups[] = $group;
-            $group->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGroup(UserGroup $group): self
-    {
-        if ($this->groups->contains($group)) {
-            $this->groups->removeElement($group);
-            // set the owning side to null (unless already changed)
-            if ($group->getUserId() === $this) {
-                $group->setUserId(null);
+        foreach ($groups as $group) {
+            if (!$this->groups->contains($group)) {
+                $this->groups->add($group);
             }
         }
+    }
 
-        return $this;
+    public function removeGroup(Group $group): void
+    {
+        $this->tags->removeElement($group);
     }
 }

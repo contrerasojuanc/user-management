@@ -65,7 +65,8 @@ class UserType extends AbstractType
                 'class' => Group::class,
                 'choice_label' => 'name',
                 'choice_value' => 'id',
-                'multiple' => true
+                'multiple' => true,
+                'mapped' => true
             ]);
         ;
     }
