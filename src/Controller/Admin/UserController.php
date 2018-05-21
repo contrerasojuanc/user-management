@@ -91,8 +91,10 @@ class UserController extends AbstractController
         // See https://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $groups = $form->get("groups")->getData();
+
             //Using Service
-            $this->userManagement->create($user);
+            $this->userManagement->create($user, $groups);
 
             // Flash messages are used to notify the user about the result of the
             // actions. They are deleted automatically from the session as soon
@@ -139,7 +141,9 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             //Using Service
-            $this->userManagement->update($user);
+            $groups = $form->get("groups")->getData();
+
+            $this->userManagement->update($user, $groups);
 
             $this->addFlash('success', 'User updated successfully');
 

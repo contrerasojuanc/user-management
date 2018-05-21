@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Entity\UserGroup;
 use App\Repository\UserRepository;
 use App\Utils\Validator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +32,7 @@ class UserManagement
     /**
      * For creating users
      */
-    public function create(User $user, $isAdmin = false)
+    public function create(User $user, $groups, $isAdmin = false)
     {
         $fullName = $user->getFullName();
         $username = $user->getUsername();
@@ -51,6 +52,12 @@ class UserManagement
 
         try {
             $this->entityManager->persist($user);
+            foreach ($groups as $group) {
+                $userGroup = new UserGroup();
+                $userGroup->setGroupId($group);
+                $user->addGroup($userGroup);
+                $this->entityManager->persist($userGroup);
+            }
             $this->entityManager->flush();
         } catch (Exception $e) {
             return false;
@@ -62,11 +69,26 @@ class UserManagement
     /**
      * For updating users
      */
-    public function update(User $user)
+    public function update(User $user, $groups)
     {
 
         try {
             $this->entityManager->persist($user);
+
+            foreach ($user->getGroups() as $group) {
+                $userGroup = new UserGroup();
+                $userGroup->setGroupId($group);
+                $user->addGroup($userGroup);
+
+                $user->removeGroup($userGroup);
+            }
+
+            foreach ($groups as $group) {
+                $userGroup = new UserGroup();
+                $userGroup->setGroupId($group);
+                $user->addGroup($userGroup);
+                $this->entityManager->persist($userGroup);
+            }
             $this->entityManager->flush();
         } catch (Exception $e) {
             return false;

@@ -11,9 +11,12 @@
 
 namespace App\Form;
 
+use App\Entity\Group;
 use App\Entity\User;
 use App\Form\Type\DateTimePickerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -52,6 +55,18 @@ class UserType extends AbstractType
             ->add('username', null, [
                 'label' => 'Username',
             ])
+//            ->add('groups', null, [
+//                'class' => GroupType::class,
+//                'choice_name' => 'name',
+//                'multiple' => true,
+//                'expanded' => true
+//            ])
+            ->add('groups', EntityType::class, [
+                'class' => Group::class,
+                'choice_label' => 'name',
+                'choice_value' => 'id',
+                'multiple' => true
+            ]);
         ;
     }
 
