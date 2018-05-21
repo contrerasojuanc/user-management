@@ -30,6 +30,7 @@ browser at <http://localhost:8000>:
 
 ```bash
 $ cd user-management/
+$ php bin/console doctrine:fixtures:load
 $ php bin/console server:run
 ```
 
