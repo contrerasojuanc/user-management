@@ -1,11 +1,11 @@
 {% extends 'admin/layout.html.twig' %}
 
-{% block body_id 'admin_post_edit' %}
+{% block body_id 'admin_group_edit' %}
 
 {% block main %}
-    <h1>Update user: {{ user.fullName }}</h1>
+    <h1>Update group: {{ group.name }}</h1>
 
-    {{ include('admin/user/_form.html.twig', {
+    {{ include('admin/group/_form.html.twig', {
         form: form,
         button_label: 'action.save'|trans,
         include_back_to_home_link: true,
@@ -14,7 +14,7 @@
 
 {% block sidebar %}
     <div class="section actions">
-        {{ include('admin/user/_delete_user_confirmation.html.twig', {user: user}, with_context = false) }}
+        {{ include('admin/group/_delete_group_confirmation.html.twig', {group: group}, with_context = false) }}
     </div>
 
 {% endblock %}

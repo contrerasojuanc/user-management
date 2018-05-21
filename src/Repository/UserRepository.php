@@ -33,16 +33,11 @@ class UserRepository extends ServiceEntityRepository
 {
     const NUM_ITEMS = 5;
 
+    use Paginator;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
-    }
-
-    public function findByPage($page = 1): Pagerfanta
-    {
-        $query = $this->findAll();
-
-        return $this->createPaginatorFromArray($query, $page);
     }
 
     /**
@@ -74,20 +69,4 @@ class UserRepository extends ServiceEntityRepository
         return $paginator;
     }
 
-    private function createPaginator(Query $query, int $page): Pagerfanta
-    {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($query));
-        $paginator->setMaxPerPage(self::NUM_ITEMS);
-        $paginator->setCurrentPage($page);
-
-        return $paginator;
-    }
-    private function createPaginatorFromArray(Array $query, int $page): Pagerfanta
-    {
-        $paginator = new Pagerfanta(new ArrayAdapter($query));
-        $paginator->setMaxPerPage(self::NUM_ITEMS);
-        $paginator->setCurrentPage($page);
-
-        return $paginator;
-    }
 }
