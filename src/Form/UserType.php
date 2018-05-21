@@ -46,11 +46,11 @@ class UserType extends AbstractType
                 'attr' => ['autofocus' => true],
                 'label' => 'Full Name',
             ])
-            ->add('username', null, [
-                'label' => 'Userame',
-            ])
             ->add('email', null, [
                 'label' => 'Email',
+            ])
+            ->add('username', null, [
+                'label' => 'Username',
             ])
         ;
     }

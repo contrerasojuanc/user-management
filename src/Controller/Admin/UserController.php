@@ -18,6 +18,7 @@ use App\Form\PostType;
 use App\Form\UserType;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
+use App\Service\UserManagement;
 use App\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -44,6 +45,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UserController extends AbstractController
 {
+
+    public function __construct(UserManagement $userManagement)
+    {
+        $this->userManagement = $userManagement;
+    }
+
     /**
      * Lists all Users entities.
      *
@@ -83,15 +90,15 @@ class UserController extends AbstractController
         // However, we explicitly add it to improve code readability.
         // See https://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+
+            //Using Service
+            $this->userManagement->create($user);
 
             // Flash messages are used to notify the user about the result of the
             // actions. They are deleted automatically from the session as soon
             // as they are accessed.
             // See https://symfony.com/doc/current/book/controller.html#flash-messages
-            $this->addFlash('success', 'post.created_successfully');
+            $this->addFlash('success', 'User created successfully');
 
             if ($form->get('saveAndCreateNew')->isClicked()) {
                 return $this->redirectToRoute('admin_user_new');
@@ -112,14 +119,10 @@ class UserController extends AbstractController
      * @Route("/{id}", requirements={"id": "\d+"}, name="admin_user_show")
      * @Method("GET")
      */
-    public function show(Post $post): Response
+    public function show(User $user): Response
     {
-        // This security check can also be performed
-        // using an annotation: @Security("is_granted('show', post)")
-        $this->denyAccessUnlessGranted('show', $post, 'Posts can only be shown to their authors.');
-
-        return $this->render('admin/blog/show.html.twig', [
-            'post' => $post,
+        return $this->render('admin/user/show.html.twig', [
+            'user' => $user,
         ]);
     }
 
@@ -129,24 +132,22 @@ class UserController extends AbstractController
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_user_edit")
      * @Method({"GET", "POST"})
      */
-    public function edit(Request $request, Post $post): Response
+    public function edit(Request $request, User $user): Response
     {
-        $this->denyAccessUnlessGranted('edit', $post, 'Posts can only be edited by their authors.');
-
-        $form = $this->createForm(PostType::class, $post);
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $post->setSlug(Slugger::slugify($post->getTitle()));
-            $this->getDoctrine()->getManager()->flush();
+            //Using Service
+            $this->userManagement->update($user);
 
-            $this->addFlash('success', 'post.updated_successfully');
+            $this->addFlash('success', 'User updated successfully');
 
-            return $this->redirectToRoute('admin_user_edit', ['id' => $post->getId()]);
+            return $this->redirectToRoute('admin_user_edit', ['id' => $user->getId()]);
         }
 
-        return $this->render('admin/blog/edit.html.twig', [
-            'post' => $post,
+        return $this->render('admin/user/edit.html.twig', [
+            'user' => $user,
             'form' => $form->createView(),
         ]);
     }
@@ -156,27 +157,20 @@ class UserController extends AbstractController
      *
      * @Route("/{id}/delete", name="admin_user_delete")
      * @Method("POST")
-     * @Security("is_granted('delete', post)")
      *
      * The Security annotation value is an expression (if it evaluates to false,
      * the authorization mechanism will prevent the user accessing this resource).
      */
-    public function delete(Request $request, Post $post): Response
+    public function delete(Request $request, User $user): Response
     {
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
             return $this->redirectToRoute('admin_user_index');
         }
 
-        // Delete the tags associated with this blog post. This is done automatically
-        // by Doctrine, except for SQLite (the database used in this application)
-        // because foreign key support is not enabled by default in SQLite
-        $post->getTags()->clear();
+        //Using Service
+        $this->userManagement->delete($user);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($post);
-        $em->flush();
-
-        $this->addFlash('success', 'post.deleted_successfully');
+        $this->addFlash('success', 'User deleted successfully');
 
         return $this->redirectToRoute('admin_user_index');
     }

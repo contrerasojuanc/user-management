@@ -18,28 +18,25 @@ class UserManagement
     private $entityManager;
     private $passwordEncoder;
     private $validator;
+    private $users;
 
     public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $encoder, Validator $validator, UserRepository $users)
     {
         $this->entityManager = $em;
         $this->passwordEncoder = $encoder;
         $this->validator = $validator;
+        $this->users = $users;
     }
 
     /**
-     * This method is executed after interact() and initialize(). It usually
-     * contains the logic to execute to complete this command task.
+     * For creating users
      */
-    protected function create(Request $input)
+    public function create(User $user, $isAdmin = false)
     {
-        $username = $input->getArgument('username');
-        $plainPassword = $input->getArgument('password');
-        $email = $input->getArgument('email');
-        $fullName = $input->getArgument('full-name');
-        $isAdmin = $input->getOption('admin');
-
-        // make sure to validate the user data is correct
-        $this->validateUserData($username, $plainPassword, $email, $fullName);
+        $fullName = $user->getFullName();
+        $username = $user->getUsername();
+        $plainPassword = $user->getPassword() ?? random_bytes(10);
+        $email = $user->getEmail();
 
         // create the user and encode its password
         $user = new User();
@@ -62,25 +59,77 @@ class UserManagement
         return true;
     }
 
-    private function validateUserData($username, $plainPassword, $email, $fullName)
+    /**
+     * For updating users
+     */
+    public function update(User $user)
     {
-        // first check if a user with the same username already exists.
-        $existingUser = $this->users->findOneBy(['username' => $username]);
 
-        if (null !== $existingUser) {
-            throw new RuntimeException(sprintf('There is already a user registered with the "%s" username.', $username));
+        try {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            return false;
         }
 
-        // validate password and email if is not this input means interactive.
-        $this->validator->validatePassword($plainPassword);
-        $this->validator->validateEmail($email);
-        $this->validator->validateFullName($fullName);
+    }
+
+    /**
+     * For listing users
+     */
+    public function listing()
+    {
+
+        $usres = $this->users->findAll();
+
+        return $users;
+
+    }
+
+    /**
+     * For reading users
+     */
+    public function read($username)
+    {
+
+        $existingUser = $this->users->findOneBy(['username' => $username]);
+
+        return $existingUser;
+
+    }
+
+    /**
+     * For deleting users
+     */
+    public function delete(User $user)
+    {
+
+        try {
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            return false;
+        }
+
+    }
+
+    public function validateUserData(User $user)
+    {
+        // first check if a user with the same username already exists.
+        $existingUser = $this->users->findOneBy(['username' => $user->getUsername()]);
+
+        if (null !== $existingUser) {
+            throw new RuntimeException(sprintf('There is already a user registered with the "%s" username.', $user->getUsername()));
+        }
+
+        $this->validator->validateEmail($user->getEmail());
+        $this->validator->validateFullName($user->getFullName());
 
         // check if a user with the same email already exists.
-        $existingEmail = $this->users->findOneBy(['email' => $email]);
+        $existingEmail = $this->users->findOneBy(['email' => $user->getEmail()]);
 
         if (null !== $existingEmail) {
-            throw new RuntimeException(sprintf('There is already a user registered with the "%s" email.', $email));
+            throw new RuntimeException(sprintf('There is already a user registered with the "%s" email.', $user->getEmail()));
         }
     }
 

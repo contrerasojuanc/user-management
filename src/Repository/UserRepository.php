@@ -30,7 +30,7 @@ use Pagerfanta\Pagerfanta;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    const NUM_ITEMS = 10;
+    const NUM_ITEMS = 5;
 
     public function __construct(ManagerRegistry $registry)
     {
