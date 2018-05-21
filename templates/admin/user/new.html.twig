@@ -5,8 +5,8 @@
 {% block main %}
     <h1>New User</h1>
 
-    {{ form_start(form) }}
-        {{ form_row(form.fullname) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_row(form.fullName) }}
         {{ form_row(form.email) }}
         {{ form_row(form.username) }}
         {{ form_row(form.groups) }}

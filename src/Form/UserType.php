@@ -45,15 +45,18 @@ class UserType extends AbstractType
         // $builder->add('title', null, ['required' => false, ...]);
 
         $builder
-            ->add('fullname', null, [
+            ->add('fullName', null, [
                 'attr' => ['autofocus' => true],
                 'label' => 'Full Name',
+                'empty_data' => ''
             ])
             ->add('email', null, [
                 'label' => 'Email',
+                'empty_data' => ''
             ])
             ->add('username', null, [
                 'label' => 'Username',
+                'empty_data' => ''
             ])
 //            ->add('groups', null, [
 //                'class' => GroupType::class,

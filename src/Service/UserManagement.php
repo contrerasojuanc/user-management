@@ -32,7 +32,7 @@ class UserManagement
     /**
      * For creating users
      */
-    public function create(User $user, $groups, $isAdmin = false)
+    public function create(User $user, $isAdmin = false)
     {
         $fullName = $user->getFullName();
         $username = $user->getUsername();
