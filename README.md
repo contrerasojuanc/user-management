@@ -37,10 +37,14 @@ $ php bin/console server:run
 Design
 -----
 
-A entity relationship database model can be get it using draw.io open a project from github: 
+In project's root there are two diagrams DatabaseDesign.png and DomainDesign.png
+
+These diagrams can be updated using www.draw.io
+
+The entity relationship database model can be get it using draw.io open a project from github: 
 
 ```contrerasojuanc/user-management/DatabaseDesign.xml```
 
-Also a domain diagram can be get it using draw.io and open a project from github: 
+Also the domain diagram can be get it using draw.io and open a project from github: 
 
 ```contrerasojuanc/user-management/DomainDesign.xml```
