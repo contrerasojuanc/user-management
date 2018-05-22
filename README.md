@@ -48,3 +48,19 @@ The entity relationship database model can be get it using draw.io open a projec
 Also the domain diagram can be get it using draw.io and open a project from github: 
 
 ```contrerasojuanc/user-management/DomainDesign.xml```
+
+API
+---
+
+Next restfull API endpoints are available to be used. 
+
+  get_users                  GET        ANY      ANY    /api/users                          
+  get_user                   GET        ANY      ANY    /api/users/{id}                     
+  post_user                  POST       ANY      ANY    /api/users                          
+  put_user                   PUT        ANY      ANY    /api/users/{id}                     
+  delete_user                DELETE     ANY      ANY    /api/users/{id}                     
+  get_groups                 GET        ANY      ANY    /api/groups                         
+  get_group                  GET        ANY      ANY    /api/groups/{id}                    
+  post_group                 POST       ANY      ANY    /api/groups                         
+  put_group                  PUT        ANY      ANY    /api/groups/{id}                    
+  delete_group               DELETE     ANY      ANY    /api/groups/{id} 

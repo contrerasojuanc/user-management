@@ -13,3 +13,8 @@ users:
     type:     rest
     resource: App\Controller\Api\UserController
     prefix:   /api
+
+groups:
+    type:     rest
+    resource: App\Controller\Api\GroupController
+    prefix:   /api
