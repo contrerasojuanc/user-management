@@ -19,7 +19,7 @@ Execute this command to install the project:
 $ composer update
 ```
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](http://jcusermanagement.herokuapp.com/index.php/en/login)
 
 Usage
 -----
