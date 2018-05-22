@@ -52,8 +52,9 @@ Also the domain diagram can be get it using draw.io and open a project from gith
 API
 ---
 
-Next restfull API endpoints are available to be used. 
+Next restful API endpoints are available to be used. 
 
+```
   get_users                  GET        ANY      ANY    /api/users                          
   get_user                   GET        ANY      ANY    /api/users/{id}                     
   post_user                  POST       ANY      ANY    /api/users                          
@@ -64,3 +65,4 @@ Next restfull API endpoints are available to be used.
   post_group                 POST       ANY      ANY    /api/groups                         
   put_group                  PUT        ANY      ANY    /api/groups/{id}                    
   delete_group               DELETE     ANY      ANY    /api/groups/{id} 
+```
