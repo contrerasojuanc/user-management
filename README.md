@@ -52,7 +52,7 @@ Also the domain diagram can be get it using draw.io and open a project from gith
 API
 ---
 
-Next restful API endpoints are available to be used. 
+Following restful API endpoints are available to be used. 
 
 ```
   get_users                  GET        ANY      ANY    /api/users                          
